@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h4>FHIR Data Dashboard</h4>
+                <span class="badge bg-success">Connected</span>
+            </div>
+            <div class="card-body">
+                {% if patient_id %}
+                <p><strong>Patient ID:</strong> {{ patient_id }}</p>
+                {% endif %}
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <button id="loadPatient" class="btn btn-primary">Load Patient Data</button>
+                    </div>
+                </div>
+                
+                <div id="patientData" class="mt-4" style="display: none;">
+                    <h5>Patient Information</h5>
+                    <div class="card">
+                        <div class="card-body">
+                            <pre id="patientJson" class="bg-light p-3" style="max-height: 400px; overflow-y: auto;"></pre>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="loading" class="mt-3" style="display: none;">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <span class="ms-2">Loading patient data...</span>
+                </div>
+                
+                <div id="error" class="alert alert-danger mt-3" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.getElementById('loadPatient').addEventListener('click', function() {
+    const loading = document.getElementById('loading');
+    const patientData = document.getElementById('patientData');
+    const error = document.getElementById('error');
+    const patientJson = document.getElementById('patientJson');
+    
+    // Show loading, hide others
+    loading.style.display = 'block';
+    patientData.style.display = 'none';
+    error.style.display = 'none';
+    
+    fetch('/api/patient')
+        .then(response => response.json())
+        .then(data => {
+            loading.style.display = 'none';
+            
+            if (data.error) {
+                error.textContent = data.error;
+                error.style.display = 'block';
+            } else {
+                patientJson.textContent = JSON.stringify(data, null, 2);
+                patientData.style.display = 'block';
+            }
+        })
+        .catch(err => {
+            loading.style.display = 'none';
+            error.textContent = 'Failed to load patient data: ' + err.message;
+            error.style.display = 'block';
+        });
+});
+</script>
+{% endblock %}

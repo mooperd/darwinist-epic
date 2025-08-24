@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h4>Epic FHIR API Client</h4>
+            </div>
+            <div class="card-body">
+                <p>Connect to Epic's FHIR API to access patient data.</p>
+                <p><strong>Application:</strong> darwinist-epic</p>
+                <p><strong>Environment:</strong> Sandbox</p>
+                
+                <div class="d-grid">
+                    <a href="/auth" class="btn btn-primary btn-lg">
+                        Connect to Epic FHIR
+                    </a>
+                </div>
+                
+                <div class="mt-3">
+                    <small class="text-muted">
+                        This will redirect you to Epic's authorization server to authenticate.
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
